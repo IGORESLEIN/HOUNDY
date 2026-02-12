@@ -1,7 +1,5 @@
-pub struct OutputGenerator;
+pub mod json;
+pub mod zip;
 
-impl OutputGenerator {
-    pub fn new() -> Self {
-        Self
-    }
-}
+pub use json::BloodHoundJson;
+pub use zip::create_zip;

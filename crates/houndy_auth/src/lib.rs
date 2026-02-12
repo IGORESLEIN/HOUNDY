@@ -1,7 +1,2 @@
-pub struct Authenticator;
-
-impl Authenticator {
-    pub fn new() -> Self {
-        Self
-    }
-}
+pub mod kerberos;
+pub use kerberos::KerberosContext;

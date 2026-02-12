@@ -1,7 +1,5 @@
-pub struct ProtocolHandler;
+pub mod ldap;
+pub mod adws;
 
-impl ProtocolHandler {
-    pub fn new() -> Self {
-        Self
-    }
-}
+pub use ldap::LdapClient;
+pub use adws::AdwsClient;
