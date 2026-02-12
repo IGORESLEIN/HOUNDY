@@ -1,0 +1,8 @@
+[package]
+name = "houndy_evasion"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+windows-sys = { version = "0.52", features = ["Win32_System_Memory", "Win32_System_Threading", "Win32_Security"] }
+log = "0.4"

@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "crates/houndy_core",
+    "crates/houndy_evasion",
+    "crates/houndy_protocol",
+    "crates/houndy_auth",
+    "crates/houndy_parser",
+    "crates/houndy_output"
+]
+resolver = "2"
