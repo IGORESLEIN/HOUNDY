@@ -1,0 +1,10 @@
+/target
+/.vs
+*.exe
+*.pdb
+*.suo
+*.user
+*.pdb
+*.ilk
+*.txt
+*.bat

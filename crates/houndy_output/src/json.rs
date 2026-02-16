@@ -1,12 +1,13 @@
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct BloodHoundJson {
+    // BloodHound expects "data" to be the array of nodes
     pub data: Vec<Node>,
     pub meta: Meta,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Meta {
     pub methods: u32,
     pub type_: String,
@@ -14,7 +15,7 @@ pub struct Meta {
     pub version: u32,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 #[serde(tag = "type")] // User, Computer, Group
 pub enum Node {
     User(UserNode),
@@ -22,48 +23,82 @@ pub enum Node {
     Group(GroupNode),
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
 pub struct UserNode {
-    pub Properties: UserProperties,
-    pub Aces: Vec<Ace>,
+    pub properties: UserProperties,
+    pub aces: Vec<Ace>,
+    // Add other lists like ObjectIdentifier, IsDeleted if needed
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub object_identifier: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
 pub struct ComputerNode {
-    pub Properties: ComputerProperties,
+    pub properties: ComputerProperties,
+    pub aces: Vec<Ace>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub object_identifier: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
 pub struct GroupNode {
-    pub Properties: GroupProperties,
-    pub Members: Vec<MemberReference>,
+    pub properties: GroupProperties,
+    pub members: Vec<MemberReference>,
+    pub aces: Vec<Ace>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub object_identifier: Option<String>,
 }
 
 // Placeholder structs for properties
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
 pub struct UserProperties {
-    pub name: String,
     pub domain: String,
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub distinguished_name: Option<String>,
+    pub enabled: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    // Add other BH properties: Email, DisplayName, etc.
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
 pub struct ComputerProperties {
+    pub domain: String,
     pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub distinguished_name: Option<String>,
+    pub enabled: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub operating_system: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
 pub struct GroupProperties {
+    pub domain: String,
     pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub distinguished_name: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
 pub struct Ace {
-    pub PrincipalSID: String,
-    pub RightName: String,
+    pub principal_s_i_d: String,
+    pub right_name: String,
+    pub is_inherited: bool,
+    pub principal_type: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
 pub struct MemberReference {
-    pub MemberId: String,
-    pub MemberType: String,
+    pub member_id: String,
+    pub member_type: String,
 }
